@@ -2,21 +2,22 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Testing.HealthReport;
 
-internal class HealthyReportGenerator(IDateTimeProvider dateTimeProvider, IEnumerable<HealthDataItem> healthData)
+internal class HealthyReportGenerator(IDateTimeProvider dateTimeProvider)
 {
-    internal IReadOnlyCollection<ReportRecord> GenerateHealthinessReportForPasDays(long generatePeriod)
+    internal IReadOnlyCollection<ReportRecord> GenerateHealthinessReportForPasDays(long generatePeriod, IEnumerable<HealthDataItem> healthData)
     {
         if (generatePeriod == default)
             throw new ArgumentOutOfRangeException(nameof(generatePeriod), "Expected value more than zero");
 
-        if (!healthData.Any())
+        var healthDataItems = healthData as HealthDataItem[] ?? healthData.ToArray();
+        if (healthDataItems.Length == 0)
             return Array.Empty<ReportRecord>().AsReadOnly();
         
         
         var startDate = dateTimeProvider.OffsetNow.Date.Date.AddDays(-generatePeriod);
         var endDate = dateTimeProvider.OffsetNow.Date.Date;
         
-        var dataGroupedByService = GroupHealthDataByService();
+        var dataGroupedByService = GroupHealthDataByService(healthDataItems);
 
         var reportRecords = new List<ReportRecord>(endDate.Subtract(startDate).Days * dataGroupedByService.Count());
 
@@ -52,7 +53,7 @@ internal class HealthyReportGenerator(IDateTimeProvider dateTimeProvider, IEnume
         return reportRecords.AsReadOnly();
     }
 
-    private IGrouping<string, HealthDataItem>[] GroupHealthDataByService()
+    private IGrouping<string, HealthDataItem>[] GroupHealthDataByService(IEnumerable<HealthDataItem> healthData)
     {
         var healthDataGroupedByService = healthData.GroupBy(x => x.Service);
         var dataGroupedByService = healthDataGroupedByService as IGrouping<string, HealthDataItem>[] ?? healthDataGroupedByService.ToArray();
