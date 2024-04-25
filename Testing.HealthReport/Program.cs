@@ -2,6 +2,9 @@
 // Format: {ServiceName} {Date} {Uptime} {UptimePercent} {UnhealthyPercent} {DegradedPercent}
 // Consider health data could be unavailable, for example monitoring started 1 day ago, in that case display Unavailable for periods preceding
 
+using System.Collections;
+using System.Collections.ObjectModel;
+using System.Text;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Testing.HealthReport;
 
@@ -21,28 +24,11 @@ Console.WriteLine($"Report generated date: {dateProvider.OffsetNow}");
 var endDate = dateProvider.OffsetNow;
 var startDate = endDate.AddDays(-14);
 
-for (var currentDate = startDate; currentDate <= endDate; currentDate = currentDate.AddDays(1))
+var reportGenerator = new HealthyReportGenerator("Service1", startDate, endDate, healthData);
+var reportData = reportGenerator.GenerateHealthinessReport();
+var reportPrinter = new RecordPrinter();
+
+foreach (var reportRecord in reportData)
 {
-    var healthItemsForDate = healthData.Where(item => item.Date.Date == currentDate.Date).ToList();
-    
-    if (healthItemsForDate.Count == 0)
-    {
-        Console.WriteLine($"{currentDate.Date:yyyy-MM-dd} Unavailable");
-    }
-    else
-    {
-        var totalItems = healthItemsForDate.Count;
-        var healthyItems = healthItemsForDate.Count(item => item.Status == HealthStatus.Healthy);
-        var degradedItems = healthItemsForDate.Count(item => item.Status == HealthStatus.Degraded);
-        var unhealthyItems = healthItemsForDate.Count(item => item.Status == HealthStatus.Unhealthy);
-
-        var uptimePercent = (double) healthyItems / totalItems * 100;
-        var degradedPercent = (double) degradedItems / totalItems * 100;
-        var unhealthyPercent = (double) unhealthyItems / totalItems * 100;
-        
-        var serviceName = healthItemsForDate.First().Service;
-
-        Console.WriteLine(
-            $"{currentDate.Date:yyyy-MM-dd} {serviceName} {uptimePercent:F2}% {unhealthyPercent:F2}% {degradedPercent:F2}%");
-    }
+    Console.WriteLine(reportPrinter.PrintRawData(reportRecord));
 }
