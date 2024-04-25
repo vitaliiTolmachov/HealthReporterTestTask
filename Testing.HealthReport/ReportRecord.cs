@@ -1,5 +1,3 @@
-namespace Testing.HealthReport;
-
 internal record ReportRecord(
     DateTimeOffset Date,
     string? ServiceName,
@@ -7,15 +5,14 @@ internal record ReportRecord(
     double? UnhealthyPercent,
     double? DegradedPercent)
 {
-    public static ReportRecord Empty(DateTimeOffset currentDate)
+    public static ReportRecord Empty(DateTimeOffset currentDate, string serviceName)
     {
-        return new ReportRecord(currentDate, default, default, default, default);
+        return new ReportRecord(currentDate, serviceName, default, default, default);
     }
 
     public bool IsEmpty()
     {
-        return this.ServiceName == default &&
-               this is {UptimePercent: null} &&
+        return this is {UptimePercent: null} &&
                this is {UnhealthyPercent: null} &&
                this is {DegradedPercent: null};
     }
