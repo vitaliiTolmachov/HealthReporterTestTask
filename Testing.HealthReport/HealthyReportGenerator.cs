@@ -4,23 +4,25 @@ namespace Testing.HealthReport;
 
 internal class HealthyReportGenerator
 {
+    private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IEnumerable<HealthDataItem> _healthData;
-    private string ServiceName { get; }
-    private DateTimeOffset StartDate { get; }
-    private DateTimeOffset EndDate { get; }
 
-    public HealthyReportGenerator(string serviceName, DateTimeOffset startDate, DateTimeOffset endDate, IEnumerable<HealthDataItem> healthData)
+    public HealthyReportGenerator(IDateTimeProvider dateTimeProvider, IEnumerable<HealthDataItem> healthData)
     {
-        ServiceName = serviceName;
-        StartDate = startDate;
-        EndDate = endDate;
+        _dateTimeProvider = dateTimeProvider;
         _healthData = healthData;
     }
 
-    internal IReadOnlyCollection<ReportRecord> GenerateHealthinessReport()
+    internal IReadOnlyCollection<ReportRecord> GenerateHealthinessReportForPasDays(int generatePeriod)
     {
-        var reportRecords = new List<ReportRecord>();
-        for (var currentDate = StartDate; currentDate <= EndDate; currentDate = currentDate.AddDays(1))
+        if (generatePeriod <= 0)
+            throw new ArgumentException("Expected non-negative value", nameof(generatePeriod));
+        
+        var startDate = _dateTimeProvider.OffsetNow.Date.Date.AddDays(-generatePeriod);
+        var endDate = _dateTimeProvider.OffsetNow.Date.Date;
+        
+        var reportRecords = new List<ReportRecord>(endDate.Subtract(startDate).Days);
+        for (var currentDate = startDate; currentDate <= endDate; currentDate = currentDate.AddDays(1))
         {
             var healthItemsForDate = _healthData.Where(item => item.Date.Date == currentDate.Date).ToList();
     
