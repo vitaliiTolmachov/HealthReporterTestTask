@@ -1,10 +1,12 @@
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
+namespace Testing.HealthReport;
+
 internal record ReportRecord
 {
     private readonly HealthStatus[] _healthStatusesForDate;
     private const int TotalPercentage = 100;
-    public ReportRecord(
+    internal ReportRecord(
         DateTimeOffset date,
         string serviceName,
         HealthStatus[] healthStatusesForDate)

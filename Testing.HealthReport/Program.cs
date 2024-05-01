@@ -2,9 +2,6 @@
 // Format: {ServiceName} {Date} {Uptime} {UptimePercent} {UnhealthyPercent} {DegradedPercent}
 // Consider health data could be unavailable, for example monitoring started 1 day ago, in that case display Unavailable for periods preceding
 
-using System.Collections;
-using System.Collections.ObjectModel;
-using System.Text;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Testing.HealthReport;
 

@@ -12,7 +12,7 @@ public class RecordPrinterTests
     public void PrintRawData_ShouldPrint_EmptyLabel_ForEmptyRecord(DateTimeOffset recordDate, string serviceName)
     {
         //Arrange
-        var emptyRecord = global::ReportRecord.Empty(recordDate, serviceName);
+        var emptyRecord = Testing.HealthReport.ReportRecord.Empty(recordDate, serviceName);
 
         //Act
         var expected = _recordPrinter.PrintRawData(emptyRecord);
@@ -30,7 +30,7 @@ public class RecordPrinterTests
         HealthStatus healthStatus)
     {
         //Arrange
-        var reportRecord = new global::ReportRecord(recordDate, serviceName, new[] {healthStatus});
+        var reportRecord = new Testing.HealthReport.ReportRecord(recordDate, serviceName, new[] {healthStatus});
 
         //Act
         var expected = _recordPrinter.PrintRawData(reportRecord);

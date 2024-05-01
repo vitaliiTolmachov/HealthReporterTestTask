@@ -15,7 +15,7 @@ public class ReportRecordTests
         string serviceName)
     {
         //Arrange
-        var reportRecord = new global::ReportRecord(date, serviceName, Array.Empty<HealthStatus>());
+        var reportRecord = new Testing.HealthReport.ReportRecord(date, serviceName, Array.Empty<HealthStatus>());
         
         //Act
         var expected = reportRecord.IsEmpty();
@@ -35,7 +35,7 @@ public class ReportRecordTests
         var healthyItems = BuildStatuses(HealthStatus.Healthy, unhealthyItemsCount);
         var otherStatuses = BuildStatuses(HealthStatus.Degraded, totalItemsCount-unhealthyItemsCount);
         var totalItemsForTheDay = healthyItems.Concat(otherStatuses).ToArray();
-        var reportRecord = new global::ReportRecord(date, serviceName, totalItemsForTheDay);
+        var reportRecord = new Testing.HealthReport.ReportRecord(date, serviceName, totalItemsForTheDay);
         
         //Act
         var expected =  (double)unhealthyItemsCount / totalItemsCount * TotalPercentage;
@@ -56,7 +56,7 @@ public class ReportRecordTests
         var healthyItems = BuildStatuses(HealthStatus.Unhealthy, unhealthyItemsCount);
         var otherStatuses = BuildStatuses(HealthStatus.Degraded, totalItemsCount-unhealthyItemsCount);
         var totalItemsForTheDay = healthyItems.Concat(otherStatuses).ToArray();
-        var reportRecord = new global::ReportRecord(date, serviceName, totalItemsForTheDay);
+        var reportRecord = new Testing.HealthReport.ReportRecord(date, serviceName, totalItemsForTheDay);
         
         //Act
         var expected =  (double)unhealthyItemsCount / totalItemsCount * TotalPercentage;
@@ -77,7 +77,7 @@ public class ReportRecordTests
         var healthyItems = BuildStatuses(HealthStatus.Degraded, degradedItemsCount);
         var otherStatuses = BuildStatuses(HealthStatus.Healthy, totalItemsCount-degradedItemsCount);
         var totalItemsForTheDay = healthyItems.Concat(otherStatuses).ToArray();
-        var reportRecord = new global::ReportRecord(date, serviceName, totalItemsForTheDay);
+        var reportRecord = new Testing.HealthReport.ReportRecord(date, serviceName, totalItemsForTheDay);
         
         //Act
         var expected =  (double)degradedItemsCount / totalItemsCount * TotalPercentage;
