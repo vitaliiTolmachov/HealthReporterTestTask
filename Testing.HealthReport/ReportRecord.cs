@@ -1,19 +1,47 @@
-internal record ReportRecord(
-    DateTimeOffset Date,
-    string? ServiceName,
-    double? UptimePercent,
-    double? UnhealthyPercent,
-    double? DegradedPercent)
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+
+internal record ReportRecord
 {
+    private readonly HealthStatus[] _healthStatusesForDate;
+    private const int TotalPercentage = 100;
+    public ReportRecord(
+        DateTimeOffset date,
+        string serviceName,
+        HealthStatus[] healthStatusesForDate)
+    {
+        this.Date = date;
+        this.ServiceName = serviceName;
+        this._healthStatusesForDate = healthStatusesForDate;
+    }
+
+    public DateTimeOffset Date { get; }
+    public string ServiceName { get; }
+    public double UptimePercent => CalculatePercentage(HealthyItemsCount);
+    public double UnhealthyPercent => CalculatePercentage(UnhealthyItemsCount);
+    public double DegradedPercent => CalculatePercentage(DegradedItemsCount);
+    
     public static ReportRecord Empty(DateTimeOffset currentDate, string serviceName)
     {
-        return new ReportRecord(currentDate, serviceName, default, default, default);
+        return new ReportRecord(currentDate, serviceName, Array.Empty<HealthStatus>());
     }
 
     public bool IsEmpty()
     {
-        return this is {UptimePercent: null} &&
-               this is {UnhealthyPercent: null} &&
-               this is {DegradedPercent: null};
+        return TotalItems == 0;
+    }
+
+    private int TotalItems => _healthStatusesForDate.Length;
+    private int HealthyItemsCount => _healthStatusesForDate
+        .Count(healthStatus => healthStatus == HealthStatus.Healthy);
+    
+    private int UnhealthyItemsCount => _healthStatusesForDate
+        .Count(healthStatus => healthStatus == HealthStatus.Unhealthy);
+    
+    private int DegradedItemsCount => _healthStatusesForDate
+        .Count(healthStatus => healthStatus == HealthStatus.Degraded);
+    
+    private double CalculatePercentage(int itemsPerTypeCount)
+    {
+        return (double) itemsPerTypeCount / TotalItems * TotalPercentage;
     }
 }

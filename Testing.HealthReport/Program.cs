@@ -23,8 +23,8 @@ var healthData = new List<HealthDataItem>()
     new ("Service2", DateTimeOffset.Parse("2023-07-11 04:15:04 +03:00"), HealthStatus.Healthy)
 };
 const int reportPeriodDays = 14;
-var reportGenerator = new HealthyReportGenerator(dateProvider);
-var reportData = reportGenerator.GenerateHealthinessReportForPasDays(reportPeriodDays, healthData);
+var reportGenerator = new ReportGenerator(dateProvider);
+var reportData = reportGenerator.GenerateReport(reportPeriodDays, healthData);
 var reportPrinter = new RecordPrinter();
 
 foreach (var reportRecord in reportData)
