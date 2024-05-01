@@ -28,7 +28,7 @@ public class ReportGeneratorTests
         //Act
         var expected = _reportGenerator.GenerateReport(0, Enumerable.Repeat(healthData, healthDataItems));
 
-        //Arrange
+        //Assert
         expected.Should().BeEmpty();
     }
     
@@ -39,7 +39,7 @@ public class ReportGeneratorTests
         //Act
         var expected = _reportGenerator.GenerateReport(reportDays, Enumerable.Empty<HealthDataItem>());
 
-        //Arrange
+        //Assert
         expected.Should().BeEmpty();
     }
 
@@ -53,7 +53,8 @@ public class ReportGeneratorTests
         
         //Act
         var expected = _reportGenerator.GenerateReport(daysCount, new[] {healthDataItem});
-
+        
+        //Assert
         var expectedDateRange = BuildReportDates(daysCount, currentDate);
         var reportDateRange = expected.Select(x => x.Date.Date).ToArray();
         reportDateRange.Should().BeEquivalentTo(expectedDateRange);
@@ -71,6 +72,7 @@ public class ReportGeneratorTests
         //Act
         var expected = _reportGenerator.GenerateReport(daysCount, new[] {healthDataItemForService1, healthDataItemForService2});
 
+        //Assert
         var servicesInReport = expected.Select(x => x.ServiceName).Distinct();
         servicesInReport.Should().BeEquivalentTo(new []{serviceName1, serviceName2});
     }

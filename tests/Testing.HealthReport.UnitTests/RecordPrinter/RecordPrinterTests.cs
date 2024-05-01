@@ -17,7 +17,7 @@ public class RecordPrinterTests
         //Act
         var expected = _recordPrinter.PrintRawData(emptyRecord);
 
-        //Asser
+        //Assert
         expected.Should().StartWith($"{recordDate.Date:yyyy-MM-dd}");
         expected.Should().Contain(serviceName);
         expected.Should().EndWith(HealthReport.RecordPrinter.EmptyLabel);

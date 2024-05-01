@@ -20,7 +20,7 @@ public class ReportRecordTests
         //Act
         var expected = reportRecord.IsEmpty();
         
-        //Asser
+        //Assert
         expected.Should().BeTrue();
     }
 
@@ -40,8 +40,7 @@ public class ReportRecordTests
         //Act
         var expected =  (double)unhealthyItemsCount / totalItemsCount * TotalPercentage;
         
-        //Arrange
-
+        //Assert
         reportRecord.UptimePercent.Should().Be(expected);
     }
     
@@ -61,8 +60,7 @@ public class ReportRecordTests
         //Act
         var expected =  (double)unhealthyItemsCount / totalItemsCount * TotalPercentage;
         
-        //Arrange
-
+        //Assert
         reportRecord.UnhealthyPercent.Should().Be(expected);
     }
     
@@ -82,8 +80,7 @@ public class ReportRecordTests
         //Act
         var expected =  (double)degradedItemsCount / totalItemsCount * TotalPercentage;
         
-        //Arrange
-
+        //Assert
         reportRecord.DegradedPercent.Should().Be(expected);
     }
 
