@@ -12,7 +12,7 @@ public class RecordPrinterTests
     public void PrintRawData_ShouldPrint_EmptyLabel_ForEmptyRecord(DateTimeOffset recordDate, string serviceName)
     {
         //Arrange
-        var emptyRecord = Testing.HealthReport.ReportRecord.Empty(recordDate, serviceName);
+        var emptyRecord = new Testing.HealthReport.ReportRecord(recordDate, serviceName, Array.Empty<HealthStatus>());
 
         //Act
         var expected = _recordPrinter.PrintRawData(emptyRecord);

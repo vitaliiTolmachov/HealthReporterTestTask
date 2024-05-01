@@ -21,11 +21,6 @@ internal record ReportRecord
     public double UptimePercent => CalculatePercentage(HealthyItemsCount);
     public double UnhealthyPercent => CalculatePercentage(UnhealthyItemsCount);
     public double DegradedPercent => CalculatePercentage(DegradedItemsCount);
-    
-    public static ReportRecord Empty(DateTimeOffset currentDate, string serviceName)
-    {
-        return new ReportRecord(currentDate, serviceName, Array.Empty<HealthStatus>());
-    }
 
     public bool IsEmpty()
     {
